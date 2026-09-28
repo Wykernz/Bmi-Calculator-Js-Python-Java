@@ -1,0 +1,14 @@
+D:\CS301\BMICalculator\bin\Debug\net10.0\BMICalculator.exe
+D:\CS301\BMICalculator\bin\Debug\net10.0\BMICalculator.deps.json
+D:\CS301\BMICalculator\bin\Debug\net10.0\BMICalculator.runtimeconfig.json
+D:\CS301\BMICalculator\bin\Debug\net10.0\BMICalculator.dll
+D:\CS301\BMICalculator\bin\Debug\net10.0\BMICalculator.pdb
+D:\CS301\BMICalculator\obj\Debug\net10.0\BMICalculator.GeneratedMSBuildEditorConfig.editorconfig
+D:\CS301\BMICalculator\obj\Debug\net10.0\BMICalculator.AssemblyInfoInputs.cache
+D:\CS301\BMICalculator\obj\Debug\net10.0\BMICalculator.AssemblyInfo.cs
+D:\CS301\BMICalculator\obj\Debug\net10.0\BMICalculator.csproj.CoreCompileInputs.cache
+D:\CS301\BMICalculator\obj\Debug\net10.0\BMICalculator.dll
+D:\CS301\BMICalculator\obj\Debug\net10.0\refint\BMICalculator.dll
+D:\CS301\BMICalculator\obj\Debug\net10.0\BMICalculator.pdb
+D:\CS301\BMICalculator\obj\Debug\net10.0\BMICalculator.genruntimeconfig.cache
+D:\CS301\BMICalculator\obj\Debug\net10.0\ref\BMICalculator.dll

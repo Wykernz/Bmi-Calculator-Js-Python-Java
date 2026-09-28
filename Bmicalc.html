@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BMI Calculator System</title>
+<style>
+  /* ---- Overall page ---- */
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f0f5;
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+
+  /* ---- Menu bar ---- */
+  .menubar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 36px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border-bottom: 1px solid #ddd;
+    z-index: 10;
+  }
+  .menubar .menu {
+    position: relative;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+  }
+  .menubar .menu:hover { background: #f0f0f5; }
+  .menubar .dropdown {
+    display: none;
+    position: absolute;
+    top: 100%; left: 0;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 6px 0;
+    min-width: 180px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  }
+  .menubar .menu:hover .dropdown { display: block; }
+  .menubar .dropdown div {
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .menubar .dropdown div:hover { background: #f0f0f5; }
+
+  /* ---- Calculator card ---- */
+  .card {
+    margin-top: 40px;
+    width: 400px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 30px 30px 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  }
+
+  h1 {
+    text-align: center;
+    color: #cc1155;
+    font-size: 24px;
+    margin: 0 0 6px;
+  }
+
+  .subtitle {
+    text-align: center;
+    color: #999;
+    font-size: 12px;
+    margin-bottom: 22px;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 6px;
+    margin-top: 12px;
+  }
+
+  input[type="number"] {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  input[type="number"]:focus {
+    border-color: #cc1155;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 20px;
+    font-size: 15px;
+    font-weight: bold;
+    color: white;
+    background: #cc1155;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  button:hover { background: #a80e46; }
+  button:active { background: #8a0b39; }
+
+  .result-number {
+    text-align: center;
+    font-size: 38px;
+    font-weight: bold;
+    color: #cc1155;
+    margin-top: 24px;
+    margin-bottom: 4px;
+  }
+
+  .result-category {
+    text-align: center;
+    font-size: 15px;
+    color: #999;
+  }
+</style>
+</head>
+<body>
+
+  <!-- ============================================================ -->
+  <!-- MENU BAR                                                      -->
+  <!-- ============================================================ -->
+  <div class="menubar">
+    <div class="menu">File
+      <div class="dropdown">
+        <div onclick="clearHistory()">Clear History</div>
+        <div onclick="exitApp()">Exit</div>
+      </div>
+    </div>
+    <div class="menu">View
+      <div class="dropdown">
+        <div onclick="showHistory()">Show History</div>
+        <div onclick="showStatistics()">Show Statistics</div>
+      </div>
+    </div>
+    <div class="menu">Help
+      <div class="dropdown">
+        <div onclick="showAbout()">About</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MAIN CARD                                                     -->
+  <!-- ============================================================ -->
+  <div class="card">
+    <h1>BMI Calculator</h1>
+    <div class="subtitle">Based on WHO standards</div>
+
+    <label for="height">Height (in cm):</label>
+    <input type="number" id="height" placeholder="e.g. 170">
+
+    <label for="weight">Weight (in kg):</label>
+    <input type="number" id="weight" placeholder="e.g. 65">
+
+    <button onclick="calculateBmi()">Calculate BMI</button>
+
+    <div class="result-number" id="resultNumber">—</div>
+    <div class="result-category" id="resultCategory">Enter your details</div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- JAVASCRIPT                                                    -->
+  <!-- ============================================================ -->
+  <script>
+    // ------------------------------------------------------------
+    // STATE — the calculator's memory
+    // ------------------------------------------------------------
+    var history = [];   // list of past calculations
+
+
+    // ------------------------------------------------------------
+    // MAIN ACTION — Calculate BMI
+    // ------------------------------------------------------------
+    function calculateBmi() {
+      // ---- Step 1: Get what the user typed ----
+      var heightText = document.getElementById("height").value.trim();
+      var weightText = document.getElementById("weight").value.trim();
+
+      // ---- Step 2: Make sure nothing is empty ----
+      if (heightText === "" || weightText === "") {
+        alert("Please fill in both boxes.");
+        return;
+      }
+
+      // ---- Step 3: Turn the text into numbers ----
+      var height = parseFloat(heightText);
+      var weight = parseFloat(weightText);
+
+      // ---- Step 4: Make sure they're valid positive numbers ----
+      if (isNaN(height) || isNaN(weight) || height <= 0 || weight <= 0) {
+        alert("Please type numbers bigger than 0.");
+        return;
+      }
+
+      // ---- Step 5: Do the math ----
+      var heightInMeters = height / 100;   // 170 cm → 1.70 m
+      var bmi = weight / (heightInMeters * heightInMeters);
+
+      // ---- Step 6: Decide the category ----
+      var category;
+      if (bmi < 18.5) {
+        category = "Underweight";
+      } else if (bmi < 25) {
+        category = "Normal weight";
+      } else if (bmi < 30) {
+        category = "Overweight";
+      } else if (bmi < 35) {
+        category = "Obese Class I";
+      } else if (bmi < 40) {
+        category = "Obese Class II";
+      } else {
+        category = "Obese Class III";
+      }
+
+      // ---- Step 7: Show the result ----
+      document.getElementById("resultNumber").textContent = bmi.toFixed(2);
+      document.getElementById("resultCategory").textContent = category;
+
+      // ---- Step 8: Save to history ----
+      var line = "Height: " + height.toFixed(1) + " cm | " +
+                 "Weight: " + weight.toFixed(1) + " kg | " +
+                 "BMI: " + bmi.toFixed(2) + " | " + category;
+      history.push(line);
+    }
+
+
+    // ------------------------------------------------------------
+    // MENU ACTIONS
+    // ------------------------------------------------------------
+    function showHistory() {
+      if (history.length === 0) {
+        alert("You haven't calculated anything yet.");
+        return;
+      }
+
+      var text = "";
+      for (var i = 0; i < history.length; i++) {
+        text += (i + 1) + ". " + history[i] + "\n";
+      }
+      alert(text);
+    }
+
+    function clearHistory() {
+      if (history.length === 0) {
+        alert("Nothing to clear.");
+        return;
+      }
+      if (confirm("Delete all history?")) {
+        history = [];
+        alert("History cleared!");
+      }
+    }
+
+    function showStatistics() {
+      if (history.length === 0) {
+        alert("No calculations yet.");
+        return;
+      }
+      alert("You have calculated " + history.length + " time(s).");
+    }
+
+    function showAbout() {
+      alert("BMI Calculator\nVersion 1.0\n\nMade with JavaScript by Renz A. General");
+    }
+
+    function exitApp() {
+      if (confirm("Exit the app?")) {
+        window.close();
+      }
+    }
+
+
+    // ------------------------------------------------------------
+    // ENTER KEY SUPPORT
+    // Pressing Enter in either input triggers calculateBmi()
+    // ------------------------------------------------------------
+    document.getElementById("height").addEventListener("keydown", function(e) {
+      if (e.key === "Enter") calculateBmi();
+    });
+
+    document.getElementById("weight").addEventListener("keydown", function(e) {
+      if (e.key === "Enter") calculateBmi();
+    });
+  </script>
+
+</body>
+</html>
